@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dten.punchinghole.Mapper.PunchingHoleMapper">
+
+    <!--id对应接口中的方法，名字要一样，parameterType是方法的参数类型，
+    resultType是查询返回的类型，需要注意的是，这里的SQL语句后面不能加分号，变量不能加引号-->
+    <select id="getBySearchPagination" resultType="com.dten.punchinghole.bean.PunchingHoleVO">
+        select * from punching_hole
+        <where> 1=1 <!--解决某参数为空时，产生多余'and'关键字报错问题 -->
+            <if test="self_id != null"> and self_id=#{self_id} </if>
+            <if test="self_name != null and self_name != ''"> and self_name=#{self_name} </if>
+            <if test="self_nat_type != null and self_nat_type != ''"> and self_nat_type=#{self_nat_type} </if>
+            <!--            <if test="peer_id != null" and peer_id != ''"> and peer_id=#{peer_id}</if>-->
+            <!--            <if test="peer_name != null" and peer_name != ''"> and peer_name=#{peer_name}</if>-->
+            <!--            <if test="peer_nat_type != null" and peer_nat_type != ''"> and peer_nat_type=#{peer_nat_type}</if>-->
+            <if test="ice_connection_state != null and ice_connection_state != ''"> and ice_connection_state=#{ice_connection_state}</if>
+            <!--            <if test="gmt_create != null"> and gmt_create=#{gmt_create}</if>-->
+        </where>
+    </select>
+
+    <select id="getBySearch" resultType="com.dten.punchinghole.bean.PunchingHoleVO">
+        select * from punching_hole
+        <where> 1=1 <!--解决某参数为空时，产生多余'and'关键字报错问题 -->
+            <if test="self_id != null"> and self_id=#{self_id} </if>
+            <if test="self_name != null and self_name != ''"> and self_name=#{self_name} </if>
+            <if test="self_nat_type != null and self_nat_type != ''"> and self_nat_type=#{self_nat_type} </if>
+<!--            <if test="peer_id != null" and peer_id != ''"> and peer_id=#{peer_id}</if>-->
+<!--            <if test="peer_name != null" and peer_name != ''"> and peer_name=#{peer_name}</if>-->
+<!--            <if test="peer_nat_type != null" and peer_nat_type != ''"> and peer_nat_type=#{peer_nat_type}</if>-->
+            <if test="ice_connection_state != null and ice_connection_state != ''"> and ice_connection_state=#{ice_connection_state}</if>
+<!--            <if test="gmt_create != null"> and gmt_create=#{gmt_create}</if>-->
+        </where>
+    </select>
+
+    <select id="getById" parameterType="long" resultType="PunchingHoleVO">
+        select * from punching_hole where self_id = #{id}
+    </select>
+
+    <select id="getList"  resultType="com.dten.punchinghole.bean.PunchingHoleVO">
+        select * from punching_hole order by id
+    </select>
+
+    <select id="getListByPagination"  resultType="com.dten.punchinghole.bean.PunchingHoleVO">
+        select * from punching_hole order by id
+    </select>
+
+    <insert id="insertPunchingHole" parameterType="PunchingHoleVO">
+        insert into
+            punching_hole(self_id, self_name, self_nat_type,
+            peer_id, peer_name,
+            peer_nat_type, ice_connection_state,
+            gmt_create)
+        values
+            (#{self_id}, #{self_name}, #{self_nat_type},
+            #{peer_id}, #{peer_name},
+            #{peer_nat_type}, #{ice_connection_state}, now())
+    </insert>
+
+    <update id="updatePunchingHole" parameterType="com.dten.punchinghole.bean.PunchingHoleVO">
+        update punching_hole
+        <trim prefix="set" suffixOverrides=",">
+            <if test="punchingHole.self_name != null">self_name=#{punchingHole.self_name},</if>
+            <if test="punchingHole.self_nat_type != null">self_nat_type=#{punchingHole.self_nat_type},</if>
+            <if test="punchingHole.peer_id != null">peer_id=#{punchingHole.peer_id},</if>
+            <if test="punchingHole.peer_name != null">peer_name=#{punchingHole.peer_name},</if>
+            <if test="punchingHole.peer_nat_type != null">peer_nat_type=#{punchingHole.peer_nat_type},</if>
+            <if test="punchingHole.ice_connection_state != null">ice_connection_state=#{punchingHole.ice_connection_state},</if>
+            <if test="punchingHole.gmt_create != null">gmt_create=#{punchingHole.gmt_create},</if>
+            <if test="punchingHole.gmt_modified != null">gmt_modified=#{punchingHole.gmt_modified},</if>
+            <if test="punchingHole.del_flag != null">del_flag=#{punchingHole.del_flag}</if>
+        </trim>
+        where self_id = #{id}
+    </update>
+
+    <delete id="deleteAllPunchingHole">
+        delete from punching_hole
+    </delete>
+
+    <delete id="deletePunchingHole" parameterType="long">
+        delete from punching_hole where self_id = #{id}
+    </delete>
+
+</mapper>

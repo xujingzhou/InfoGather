@@ -1,0 +1,99 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/education?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    username: root
+    password: 112233
+    driver-class-name: com.mysql.jdbc.Driver
+
+#----------------druid数据源配置-----------------------
+#  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    druid:
+#      #这里跟pom里面mysql-connector版本相关8.0之后用com.mysql.cj.jdbc.Driver，之前用com.mysql.jdbc.Driver
+#      driver-class-name: com.mysql.cj.jdbc.Driver
+#      #这里改成你自己的数据库名称以及账号和密码
+#      url: jdbc:mysql://localhost:3306/education?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+#      username: root
+#      password: 112233
+#      initialSize: 10
+#      minIdle: 10
+#      maxActive: 30
+#      # 配置获取连接等待超时的时间
+#      maxWait: 60000
+#      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+#      timeBetweenEvictionRunsMillis: 60000
+#      # 配置一个连接在池中最小生存的时间，单位是毫秒
+#      minEvictableIdleTimeMillis: 300000
+#      validationQuery: SELECT 1 FROM DUAL
+#      testWhileIdle: true
+#      testOnBorrow: false
+#      testOnReturn: false
+#      # 打开PSCache，并且指定每个连接上PSCache的大小
+#      poolPreparedStatements: true
+#      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+#      #filters: stat,wall,log4j
+#      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+#      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+#      # 合并多个DruidDataSource的监控数据
+#      useGlobalDataSourceStat: true
+
+#----------------mybatis plus配置-----------------------
+mybatis-plus:
+  # xml扫描，多个目录用逗号或者分号分隔(告诉 Mapper 所对应的 XML 文件位置)
+  mapper-locations: classpath:mappers/*.xml
+  configuration:
+    # 是否开启自动驼峰命名规则映射:从数据库列名到Java属性驼峰命名的类似映射
+    map-underscore-to-camel-case: false
+    # 如果查询结果中包含空值的列，则 MyBatis 在映射的时候，不会映射这个字段
+    call-setters-on-nulls: true
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 实体扫描，多个package用逗号或者分号分隔（这里更改为你的实体类存放路径）
+  typeAliasesPackage: com.dten.punchinghole.bean
+  global-config:
+    db-config:
+      #主键类型 AUTO:"数据库ID自增" INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: auto
+      #字段策略 IGNORED:"忽略判断"  NOT_NULL:"非 NULL 判断")  NOT_EMPTY:"非空判断"
+      field-strategy: NOT_EMPTY
+      #数据库类型
+      db-type: MYSQL
+      # 逻辑删除配置
+      # 删除前
+      logic-not-delete-value: 1
+      # 删除后
+      logic-delete-value: 0
+
+  #----------------静态资源配置-----------------------
+  #指定环境：开发环境（dev）、测试环境（test）、生产环境（prod）
+#  profiles:
+#    active: dev
+  #打war时指定静态文件，没有效果
+  resources:
+    static-locations: /static/,/public/
+  mvc:
+    static-path-pattern: /** #静态资源映射路径
+
+#----------------swagger配置-----------------------
+swagger:
+  #生产环境改为false（改为false后swagger-ui.html则无法访问）
+  enable: true
+#解决Swagger2 异常 NumberFormatException:For input string:""
+logging:
+  level:
+    io:
+      swagger:
+        models:
+          parameters:
+            AbstractSerializableParameter: ERROR
+
+server:
+  port: 8081
+#  内部tomcat配置
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    max-connections: 1000
+  servlet:
+    #访问根路径
+    context-path: /
